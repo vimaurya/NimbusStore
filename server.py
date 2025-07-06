@@ -3,13 +3,17 @@ import json
 import re
 import os
 from dotenv import load_dotenv
+import shortuuid    
+import mimetypes
 
 
 load_dotenv()
 
 STORAGE_PATH = os.getenv('STORAGE_PATH')
+PORT = int(os.getenv('PORT'))
 
 print(f"this is storage path : {STORAGE_PATH}")
+
 
 class SimpleAPIHandler(BaseHTTPRequestHandler):
     
@@ -18,13 +22,11 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             self.hello()
         elif self.path in ["/api/files", "/api/files/"]:
             self.files()
-            
-        elif re.match(r'^/api/files/[\w]+$', self.path):
+        elif re.match(r'^/api/files/[\w]+\.[\w]+$', self.path):
             file_id = self.path.split("/")[-1]
-            self.file_by_id(file_id)
-            
+            self.file_by_id(file_id)  
         else:
-            self.send_error(404, "Not Found")
+            self.send_error(404, "something Not Found")
             
     def files(self):
         self.send_response(200)
@@ -37,13 +39,57 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(response).encode())
         
         
-    def file_by_id(self, id):
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json")
-        self.end_headers()
-        response = {"Files" : f"searching file id : {id}"}
-        self.wfile.write(json.dumps(response).encode())
+    def file_by_id(self, file_id):
+        file_path = os.path.join(STORAGE_PATH, file_id)
         
+        print(f"File path : {file_path}")
+        
+        if not os.path.exists(file_path):
+            self.send_error(404, f"file {file_id} not found")
+        
+        user_agent = self.headers.get('User-Agent', '').lower()
+        is_terminal = 'curl' in user_agent
+        
+        if is_terminal:
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            response = {
+                "preview_link": f"http://localhost:8000/api/files/{file_id}",
+                "download_link": f"http://localhost:8000/api/files/{file_id}?download=true"
+            }
+            self.wfile.write(json.dumps(response).encode()) 
+              
+        else: 
+            print("accessing from browser")
+            preview = "download" not in self.headers.get("Accept", " ").lower()
+            
+            self._serve_file(file_path, preview)
+            
+        
+    def _serve_file(self, file_path, preview=True):
+        mime_type, encoding = mimetypes.guess_type(file_path)
+        
+        if not mime_type:
+            mime_type = "application/octet-stream"
+            
+        with open(file_path, "rb") as f:
+            file_data = f.read()
+        
+        self.send_response(200)
+        self.send_header("Content-Type", mime_type)
+        self.send_header("Content-Length", str(len(file_data)))
+      
+        if mime_type.startswith(('image/', 'text/', 'application/pdf')):
+            filename = os.path.basename(file_path)
+            self.send_header("Content-Disposition", f"inline; filename=\"{filename}\"")
+        else:
+            filename = os.path.basename(file_path)
+            self.send_header("Content-Disposition", f"attachment; filename=\"{filename}\"")            
+        
+        self.end_headers()
+        self.wfile.write(file_data)
+            
         
     def do_POST(self):
           
@@ -63,6 +109,10 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
         try:  
             data, filename = self._parsefile(post_data, boundary)
             
+            uuid = shortuuid.uuid()
+            short_uuid = uuid[:7]
+            
+            filename = short_uuid+"_"+filename
             
             with open(os.path.join(STORAGE_PATH, filename), "wb") as f:
                 f.write(data)
@@ -95,6 +145,10 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             
         
 if __name__ == "__main__":
-    server = HTTPServer(("localhost", 8000), SimpleAPIHandler)
-    print("Server running at http://localhost:8000")
+    mimetypes.init()
+    
+    mimetypes.add_type("application/wasm", ".wasm")
+    
+    server = HTTPServer(("localhost", PORT), SimpleAPIHandler)
+    print(f"Server running at http://localhost:{PORT}")
     server.serve_forever()
