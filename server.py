@@ -12,12 +12,11 @@ load_dotenv()
 STORAGE_PATH = os.getenv('STORAGE_PATH')
 PORT = int(os.getenv('PORT'))
 
-print(f"this is storage path : {STORAGE_PATH}")
-
 
 class SimpleAPIHandler(BaseHTTPRequestHandler):
     
     def do_GET(self):
+        print(f"\n{self.headers}")
         if self.path in ["/api/hello", "/api/hello/"]:
             self.hello()
         elif self.path in ["/api/files", "/api/files/"]:
@@ -41,8 +40,6 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
         
     def file_by_id(self, file_id):
         file_path = os.path.join(STORAGE_PATH, file_id)
-        
-        print(f"File path : {file_path}")
         
         if not os.path.exists(file_path):
             self.send_error(404, f"file {file_id} not found")
@@ -92,7 +89,6 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             
         
     def do_POST(self):
-          
         if self.path in ["/api/upload", "/api/upload/"]:
             self.upload()
         else:
@@ -103,6 +99,10 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
         content_type = self.headers['Content-Type']
         content_length = int(self.headers["Content-Length"])
         post_data = self.rfile.read(content_length)
+        
+        print(f"content type : {content_type}")
+        print(f"content length : {content_length}")
+        print(f"data : {post_data}")
         
         boundary = content_type.split("boundary=")[1]
         
@@ -127,20 +127,49 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             self.send_error(400, f"error parsing file : {str(e)}")
         
         
-    
+    """
     def _parsefile(self, post_data, boundary):
         boundary = boundary.encode('utf-8')
         pattern = re.compile(b'--' + boundary + b'\r\nContent-Disposition: form-data; name="file"; filename="(.*?)"\r\nContent-Type: .*?\r\n\r\n(.*?)\r\n--' + boundary + b'--\r\n', re.DOTALL)
-        
-        match = pattern.search(post_data)
-        if not match:
-            raise ValueError("Could not parse multipart data")
+        try:
+            match = pattern.search(post_data)
+            if not match:
+                raise ValueError("Could not parse multipart data")
+                
+            filename = match.group(1).decode('utf-8')
+            file_content = match.group(2)
             
-        filename = match.group(1).decode('utf-8')
-        file_content = match.group(2)
+            return file_content, filename
+        except Exception as e:
+            return e
+    """
         
-        return file_content, filename
+    def _parsefile(self, post_data, boundary):
+        try:
+            boundary = boundary.encode('utf-8')
+            parts = post_data.split(b'--' + boundary)
             
+            for part in parts:
+                if not part.strip() or part.endswith(b'--\r\n'):
+                    continue 
+                    
+                header_data, _, file_data = part.partition(b'\r\n\r\n')
+                headers = header_data.decode('utf-8')
+                
+                filename_match = re.search(
+                    r'filename=(["\'])(.*?)\1', 
+                    headers, 
+                    re.IGNORECASE
+                )
+                if filename_match:
+                    filename = os.path.basename(filename_match.group(2))
+                    return file_data.rstrip(b'\r\n'), filename
+                    
+            raise ValueError("No file found in multipart data")
+            
+        except Exception as e:
+            raise ValueError(f"Parse failed: {str(e)}") 
+                
                 
             
         
