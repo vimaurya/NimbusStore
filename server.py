@@ -2,9 +2,14 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import re
 import os
+from dotenv import load_dotenv
 
 
-STORAGE_PATH = "C:/Users/Vikash maurya/backendproject/apis/API cloud storage/Storage"
+load_dotenv()
+
+STORAGE_PATH = os.getenv('STORAGE_PATH')
+
+print(f"this is storage path : {STORAGE_PATH}")
 
 class SimpleAPIHandler(BaseHTTPRequestHandler):
     
@@ -59,7 +64,7 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             data, filename = self._parsefile(post_data, boundary)
             
             
-            with open(os.path.join("./storage",filename), "wb") as f:
+            with open(os.path.join(STORAGE_PATH, filename), "wb") as f:
                 f.write(data)
                 
             self.send_response(200)
