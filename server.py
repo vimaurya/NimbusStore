@@ -1,3 +1,4 @@
+from socketserver import ThreadingMixIn
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import re
@@ -5,6 +6,7 @@ import os
 from dotenv import load_dotenv
 import shortuuid    
 import mimetypes
+import auth
 
 
 load_dotenv()
@@ -12,10 +14,13 @@ load_dotenv()
 STORAGE_PATH = os.getenv('STORAGE_PATH')
 PORT = int(os.getenv('PORT'))
 
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    daemon_threads = True
 
 class SimpleAPIHandler(BaseHTTPRequestHandler):
     
     def do_GET(self):
+        
         print(f"\n{self.headers}")
         if self.path in ["/api/hello", "/api/hello/"]:
             self.hello()
@@ -170,7 +175,6 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
         except Exception as e:
             raise ValueError(f"Parse failed: {str(e)}") 
                 
-                
             
         
 if __name__ == "__main__":
@@ -178,6 +182,6 @@ if __name__ == "__main__":
     
     mimetypes.add_type("application/wasm", ".wasm")
     
-    server = HTTPServer(("localhost", PORT), SimpleAPIHandler)
+    server = ThreadedHTTPServer(("localhost", PORT), SimpleAPIHandler)
     print(f"Server running at http://localhost:{PORT}")
     server.serve_forever()
