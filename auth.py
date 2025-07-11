@@ -1,15 +1,18 @@
 
 class auth:
-    def create_user():
+    def create_user(self):
         pass
     
-    def generate_api_key():
+    def generate_api_key(self):
         pass
     
     def auth_login():
         pass
     
     def validate_key():
+        pass
+    
+    def hash_password(self):
         pass
     
     def authenticate(self):

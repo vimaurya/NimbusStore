@@ -1,12 +1,11 @@
 from socketserver import ThreadingMixIn
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import json
 import re
 import os
-from dotenv import load_dotenv
-import shortuuid    
+from dotenv import load_dotenv  
 import mimetypes
-import auth
+from auth import auth
+from utility import util_funcs
 
 
 load_dotenv()
@@ -18,163 +17,48 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     daemon_threads = True
 
 class SimpleAPIHandler(BaseHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        self.utils = util_funcs(STORAGE_PATH=STORAGE_PATH)
+        super().__init__(*args, **kwargs)
     
     def do_GET(self):
         
+        self.paths = [
+            "/api/files",
+            "/api/files/"
+        ]
+        
         print(f"\n{self.headers}")
-        if self.path in ["/api/hello", "/api/hello/"]:
-            self.hello()
-        elif self.path in ["/api/files", "/api/files/"]:
-            self.files()
-        elif re.match(r'^/api/files/[\w]+\.[\w]+$', self.path):
+            
+        if self.path in self.paths:
+            self.utils.files(self)
+            
+        elif re.match(r'/api/files/[\w-]+\.[\w]+(\?download=true)?$', self.path):
             file_id = self.path.split("/")[-1]
-            self.file_by_id(file_id)  
+            
+            if '?' in file_id:
+                file_id = file_id.split("?")[0]
+                
+            self.utils.file_by_id(self, file_id)  
+            
         else:
-            self.send_error(404, "something Not Found")
-            
-    def files(self):
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json")
-        self.end_headers()
-        
-        dirs = os.listdir(STORAGE_PATH)
-
-        response = {"Files":f"{dirs}"}
-        self.wfile.write(json.dumps(response).encode())
-        
-        
-    def file_by_id(self, file_id):
-        file_path = os.path.join(STORAGE_PATH, file_id)
-        
-        if not os.path.exists(file_path):
-            self.send_error(404, f"file {file_id} not found")
-        
-        user_agent = self.headers.get('User-Agent', '').lower()
-        is_terminal = 'curl' in user_agent
-        
-        if is_terminal:
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json")
-            self.end_headers()
-            response = {
-                "preview_link": f"http://localhost:8000/api/files/{file_id}",
-                "download_link": f"http://localhost:8000/api/files/{file_id}?download=true"
-            }
-            self.wfile.write(json.dumps(response).encode()) 
-              
-        else: 
-            print("accessing from browser")
-            preview = "download" not in self.headers.get("Accept", " ").lower()
-            
-            self._serve_file(file_path, preview)
-            
-        
-    def _serve_file(self, file_path, preview=True):
-        mime_type, encoding = mimetypes.guess_type(file_path)
-        
-        if not mime_type:
-            mime_type = "application/octet-stream"
-            
-        with open(file_path, "rb") as f:
-            file_data = f.read()
-        
-        self.send_response(200)
-        self.send_header("Content-Type", mime_type)
-        self.send_header("Content-Length", str(len(file_data)))
-      
-        if mime_type.startswith(('image/', 'text/', 'application/pdf')):
-            filename = os.path.basename(file_path)
-            self.send_header("Content-Disposition", f"inline; filename=\"{filename}\"")
-        else:
-            filename = os.path.basename(file_path)
-            self.send_header("Content-Disposition", f"attachment; filename=\"{filename}\"")            
-        
-        self.end_headers()
-        self.wfile.write(file_data)
-            
+            self.send_error(404, "endpoint not found")
+                    
         
     def do_POST(self):
-        if self.path in ["/api/upload", "/api/upload/"]:
-            self.upload()
+        paths = [
+            "/api/upload",
+            "/api/upload/",
+            "/api/signup/",
+            "/api/signup"
+        ]
+        
+        if self.path in paths:
+            self.utils.upload(self)
         else:
             self.send_error(404, "Not Found")
             
 
-    def upload(self):
-        content_type = self.headers['Content-Type']
-        content_length = int(self.headers["Content-Length"])
-        post_data = self.rfile.read(content_length)
-        
-        print(f"content type : {content_type}")
-        print(f"content length : {content_length}")
-        print(f"data : {post_data}")
-        
-        boundary = content_type.split("boundary=")[1]
-        
-        try:  
-            data, filename = self._parsefile(post_data, boundary)
-            
-            uuid = shortuuid.uuid()
-            short_uuid = uuid[:7]
-            
-            filename = short_uuid+"_"+filename
-            
-            with open(os.path.join(STORAGE_PATH, filename), "wb") as f:
-                f.write(data)
-                
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json")
-            self.end_headers()
-            response = {"success" : f"file {filename} uploaded successfully"}
-            self.wfile.write(json.dumps(response).encode())
-            
-        except Exception as e:
-            self.send_error(400, f"error parsing file : {str(e)}")
-        
-        
-    """
-    def _parsefile(self, post_data, boundary):
-        boundary = boundary.encode('utf-8')
-        pattern = re.compile(b'--' + boundary + b'\r\nContent-Disposition: form-data; name="file"; filename="(.*?)"\r\nContent-Type: .*?\r\n\r\n(.*?)\r\n--' + boundary + b'--\r\n', re.DOTALL)
-        try:
-            match = pattern.search(post_data)
-            if not match:
-                raise ValueError("Could not parse multipart data")
-                
-            filename = match.group(1).decode('utf-8')
-            file_content = match.group(2)
-            
-            return file_content, filename
-        except Exception as e:
-            return e
-    """
-        
-    def _parsefile(self, post_data, boundary):
-        try:
-            boundary = boundary.encode('utf-8')
-            parts = post_data.split(b'--' + boundary)
-            
-            for part in parts:
-                if not part.strip() or part.endswith(b'--\r\n'):
-                    continue 
-                    
-                header_data, _, file_data = part.partition(b'\r\n\r\n')
-                headers = header_data.decode('utf-8')
-                
-                filename_match = re.search(
-                    r'filename=(["\'])(.*?)\1', 
-                    headers, 
-                    re.IGNORECASE
-                )
-                if filename_match:
-                    filename = os.path.basename(filename_match.group(2))
-                    return file_data.rstrip(b'\r\n'), filename
-                    
-            raise ValueError("No file found in multipart data")
-            
-        except Exception as e:
-            raise ValueError(f"Parse failed: {str(e)}") 
-                
             
         
 if __name__ == "__main__":
