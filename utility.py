@@ -36,7 +36,6 @@ class util_funcs:
             print (f"user agent : {user_agent}")
             
             if 'curl' in user_agent:
-                print("user in terminal...")
                 handler.send_response(200)
                 handler.send_header('Content-Type', 'application/json')
                 handler.end_headers()
@@ -46,8 +45,8 @@ class util_funcs:
                 #host = 'localhost:8000'
                 
                 response = {
-                    "preview_link": f"http://{host}/api/files/{file_id}",
-                    "download_link": f"http://{host}/api/files/{file_id}?download=true"
+                    "preview_link": f"https://{host}/api/files/{file_id}",
+                    "download_link": f"https://{host}/api/files/{file_id}?download=true"
                 }
                 handler.wfile.write(json.dumps(response).encode())
                 return

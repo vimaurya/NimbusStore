@@ -4,13 +4,15 @@ import re
 import os
 from dotenv import load_dotenv  
 import mimetypes
-from auth import auth
 from utility import util_funcs
+import certnkey
+import ssl
 
 
 load_dotenv()
 
 STORAGE_PATH = os.getenv('STORAGE_PATH')
+SSL_PATH = os.getenv('SSL_PATH')
 PORT = int(os.getenv('PORT'))
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
@@ -67,5 +69,13 @@ if __name__ == "__main__":
     mimetypes.add_type("application/wasm", ".wasm")
     
     server = ThreadedHTTPServer(("localhost", PORT), SimpleAPIHandler)
-    print(f"Server running at http://localhost:{PORT}")
+    
+    sslcontext = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    
+    sslcontext.load_cert_chain(SSL_PATH+'/cert.pem', SSL_PATH+'/key.pem')
+    
+    server.socket = sslcontext.wrap_socket(server.socket, server_side=True)
+    
+    print(f"Server running at https://localhost:{PORT}")
+    
     server.serve_forever()
