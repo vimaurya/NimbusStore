@@ -55,15 +55,34 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             "/api/signup"
         ]
         
-        if self.path in paths:
+        if re.match(r'/api/upload/?$', self.path):
             self.utils.upload(self)
+        
+        elif re.match(r'/api/signup/?$', self.path):
+            self.utils.signup(self)
+            
         else:
             self.send_error(404, "Not Found")
             
 
-            
-        
+"""
 if __name__ == "__main__":
+    
+    mimetypes.init()
+    
+    mimetypes.add_type("application/wasm", ".wasm")
+    
+    server = ThreadedHTTPServer(("localhost", PORT), SimpleAPIHandler)
+    
+    print(f"Server running at http://localhost:{PORT}")
+    
+    server.serve_forever()
+
+            
+""" 
+      
+if __name__ == "__main__":
+    
     mimetypes.init()
     
     mimetypes.add_type("application/wasm", ".wasm")

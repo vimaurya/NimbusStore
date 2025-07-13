@@ -3,12 +3,16 @@ import json
 import re
 import shortuuid
 import os
+import ssl
 
 class util_funcs:
     def __init__(self, STORAGE_PATH):
         self.STORAGE_PATH = STORAGE_PATH
         self.CHUNK_SIZE = 1024 * 64  
         mimetypes.init()
+        
+    def signup(self, handler):
+        pass
         
     def files(self, handler):
         handler.send_response(200)
@@ -35,18 +39,24 @@ class util_funcs:
             
             print (f"user agent : {user_agent}")
             
-            if 'curl' in user_agent:
+            non_showable_agents = ['curl', 'powershell', 'wget', 'python-requests']
+            if any(agent in user_agent for agent in non_showable_agents):
                 handler.send_response(200)
                 handler.send_header('Content-Type', 'application/json')
                 handler.end_headers()
                 
                 host = handler.headers.get('Host', 'localhost:8000')
-                
+            
                 #host = 'localhost:8000'
                 
+                protocol = "http"
+                
+                if hasattr(handler.server, 'socket') and isinstance(handler.server.socket, ssl.SSLSocket):
+                    protocol = "https"
+                
                 response = {
-                    "preview_link": f"https://{host}/api/files/{file_id}",
-                    "download_link": f"https://{host}/api/files/{file_id}?download=true"
+                    "preview_link": f"{protocol}://{host}/api/files/{file_id}",
+                    "download_link": f"{protocol}://{host}/api/files/{file_id}?download=true"
                 }
                 handler.wfile.write(json.dumps(response).encode())
                 return
