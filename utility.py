@@ -94,16 +94,20 @@ class util_funcs:
            
                 
     def upload(self, handler):
-        content_type = handler.headers['Content-Type']
-        content_length = int(handler.headers["Content-Length"])
-        post_data = handler.rfile.read(content_length)
+        try:
+            content_type = handler.headers['Content-Type']
+            
+            if 'multipart/form-data' not in content_type:
+                raise ValueError("Expected multipart/form-data content type")
+            
+            content_length = int(handler.headers.get("Content-Length", 0))
+            post_data = handler.rfile.read(content_length)
+            
+            print(f"content type : {content_type}")
+            print(f"content length : {content_length}")
+            
+            boundary = content_type.split("boundary=")[1]
         
-        print(f"content type : {content_type}")
-        print(f"content length : {content_length}")
-        
-        boundary = content_type.split("boundary=")[1]
-        
-        try:  
             data, filename = self._parsefile(post_data, boundary)
             
             uuid = shortuuid.uuid()
@@ -121,7 +125,7 @@ class util_funcs:
             handler.wfile.write(json.dumps(response).encode())
             
         except Exception as e:
-            handler.send_error(400, f"error parsing file : {str(e)}")
+            handler.send_error(400, f"error : {str(e)}")
         
         
     """
