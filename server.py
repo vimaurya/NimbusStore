@@ -55,14 +55,15 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             "/api/signup"
         ]
         
-        if re.match(r'/api/upload/?$', self.path):
+        if self.path not in paths:
+            self.send_error(404, "endpoint not found")
+            
+        elif re.match(r'/api/upload/?$', self.path):
             self.utils.upload(self)
         
         elif re.match(r'/api/signup/?$', self.path):
             self.utils.signup(self)
             
-        else:
-            self.send_error(404, "Not Found")
             
 
 """

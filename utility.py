@@ -4,6 +4,7 @@ import re
 import shortuuid
 import os
 import ssl
+import dbconfig
 
 class util_funcs:
     def __init__(self, STORAGE_PATH):
@@ -12,7 +13,60 @@ class util_funcs:
         mimetypes.init()
         
     def signup(self, handler):
-        pass
+        try:
+            content_type = handler.headers['Content-Type']
+            if content_type != 'application/json':
+                handler.send_error(415, "only json data accepted")
+                return 
+            
+            content_length = int(handler.headers.get('Content-Length', 0))
+            post_data = handler.rfile.read(content_length)
+            
+            user_data = json.loads(post_data)
+            
+            print(f"this is user data : {user_data}")
+            
+            required = ['user_id', 'password']
+            
+            if not all(field in user_data for field in required):
+                handler.send_error(400, "missing required field(s)")
+                return
+            
+            user_id = user_data['user_id']
+            password = user_data['password']
+            
+            if not user_id or not password:
+                raise ValueError("required fields can not be empty")
+            
+            #database operations
+            
+            
+            db = dbconfig.Database()
+        
+            db.create_user(user_id, password)
+            
+            api_key = db.create_api_key()
+            
+            if api_key:
+                handler.send_response(201)
+                handler.send_header("Content-Type", "application/json")
+                handler.end_headers()
+            
+                response = {
+                    "success": True,
+                    "user_id" : user_id,
+                    "api_key" : f"{api_key}",
+                    "message" : "handle the api keys with safety, store it in a trusted location"
+                }
+                
+                handler.wfile.write(json.dumps(response).encode())  
+            else:
+                handler.send_error(500, "can not generate api key for user : {user}")
+    
+            
+        except Exception as e:
+            handler.send_error(500, f"{str(e)}")
+        
         
     def files(self, handler):
         handler.send_response(200)

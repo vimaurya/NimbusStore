@@ -10,6 +10,40 @@ class req:
         }
 
         self.url = 'https://localhost:8000'
+    
+    def signup(self, endpoint='/api/signup')->None:
+        self.url = self.url + endpoint
+        
+        while True:
+            user_id = input("Enter user_id : ")
+            password = input("Enter password : ")
+            #conf_password = input("Confirm password : ")
+            
+            conf_password = password
+            
+            if password==conf_password:
+                break
+            
+            print("passwords do not match...\n")
+            
+        payload = {
+            'user_id' : user_id,
+            'password' : password
+        } 
+        try:   
+            response = requests.post(
+                self.url, 
+                json=payload,
+                headers=self.header, 
+                verify=False
+            ) 
+            response.raise_for_status()
+            
+            print(response.text)
+            
+        except Exception as e:
+            print(str(e))
+        
         
     def get_files(self, endpoint='/api/files')->None:
         self.url = self.url+endpoint
@@ -34,8 +68,10 @@ if __name__ == "__main__":
         
     request_obj = req()
 
-    func = input("Enter what function to call : ")
+    #func = input("Enter what function to call : ")
 
+    func = "signup"
+    
     if hasattr(request_obj, func):
         method = getattr(request_obj, func)
         method()
