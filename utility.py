@@ -40,12 +40,11 @@ class util_funcs:
             
             #database operations
             
-            
             db = dbconfig.Database()
-        
-            db.create_user(user_id, password)
             
-            api_key = db.create_api_key()
+            db.create_user(user_id, password)
+        
+            api_key = db.create_api_key(user_id)
             
             if api_key:
                 handler.send_response(201)

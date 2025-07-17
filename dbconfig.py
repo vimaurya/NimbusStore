@@ -18,11 +18,25 @@ DB_USERNAME = os.getenv("DB_USERNAME")
 
 class Database:
     def __init__(self):
-        self._connection_pool = ConnectionPool(max_connections=10)
-        self.auth = auth()
-        self.users_table = "users"
-        self.api_key_table = "api_keys"
-
+        try:
+            print("initialising database connection...")
+            self._connection_pool = ConnectionPool(
+                                    max_connections=10,
+                                    host = DB_HOST,
+                                    user = DB_USERNAME,
+                                    password = DB_PASSWORD,
+                                    db = DATABASE
+            )
+            
+            print("connection pool created successfully...")
+            self.auth = auth()
+            self.users = "users"
+            self.api_keys_table = "api_keys"
+            
+        except Exception as e:
+            print("database initialization failed...")
+            raise RuntimeError(e)
+        
     @contextmanager
     def _get_connection(self):
         conn = self._connection_pool.get_connection()
@@ -44,17 +58,16 @@ class Database:
             except Exception as e:
                 raise RuntimeError(e)
     
-    def create_user(self, user_id, password):
+    def create_user(self, user_id, password)->None:
         if len(password)<8:
             raise ValueError("minimum password length is 8")
         
         self.user_id = user_id
         self.password = self.auth.hash_password(password)
-        
         with self._get_connection() as conn:
             try:
                 with conn.cursor() as cursor:
-                    query = "INSERT INTO `{}`(user_id, password) VALUES (%s, %s)".format(self.users)
+                    query = "INSERT INTO `{}`(user_id, password_hash) VALUES (%s, %s)".format(self.users)
                     cursor.execute(query, (self.user_id, self.password))
                     
                 conn.commit()
@@ -70,16 +83,16 @@ class Database:
             raise KeyError(f"User {user_id} not found")
 
         with self._get_connection() as conn:
-            key_data = self.auth.generate_api_key(user_id)
+            key_data = self.auth.generate_api_key()
             try:
                 with conn.cursor() as cursor:
-                    query = """INSERT INTO TABLE `{}`(
+                    query = """INSERT INTO `{}`(
                                 user_id, key_hash, key_prefix, expires_at
                             )
                             VALUES(
                                 %s, %s, %s, %s
                             )
-                            """.format(self.api_key_table)
+                            """.format(self.api_keys_table)
                     cursor.execute(query, (
                         user_id, 
                         key_data['key_hash'], 
@@ -98,23 +111,44 @@ class Database:
 
 
 class ConnectionPool:
-    def __init__(self, max_connections=5):
+    def __init__(self, max_connections=5, **kwargs):
         self._connections = Queue(max_connections)
         self.lock = threading.Lock()
+        self._connection_args = kwargs
         
-        for _ in range(max_connections):
-            self._connections.put(pymysql.connect(
-                host=DB_HOST,
-                port=PORT,
-                user=DB_USERNAME,
-                password=DB_PASSWORD,
-                database=DATABASE
-            ))
-
+        for i in range(max_connections):
+            try:
+                conn = pymysql.connect(
+                    connect_timeout=5,
+                    **self._connection_args
+                )
+                conn.ping(reconnect=True)
+                self._connections.put(conn)
+                print(f"connection {i+1} established")
+            except Exception as e:
+                print(f"failed to establish connection {i+1}")
+                raise RuntimeError(e)
+            
     def get_connection(self):
-        return self._connections.get()
+        conn =  self._connections.get()
+        try:
+            conn.ping(reconnect=True)
+            return conn
+        except Exception:
+            print("connection dead, establishing new connection...")
+            new_conn = self._connections.get(**self._connection_args)
+            self._connections.put(new_conn)
+            return new_conn
 
     def release_connection(self, conn):
-        self._connections.put(conn)       
+        try:
+            if conn.open:
+                self._connections.put(conn)
+            else:
+                print("Connection was closed, replacing...")
+                self._connections.put(pymysql.connect(**self._connection_args))
+        except Exception as e:
+            print(f"Error releasing connection: {str(e)}")
+            self._connections.put(pymysql.connect(**self._connection_args))      
                 
     

@@ -1,10 +1,17 @@
 import bcrypt
 import secrets
 import datetime
+import hashlib
+import hmac
 from datetime import timedelta
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 class auth:
     def __init__(self):
+        self.secret_key = os.getenv('API_KEY_SECRET', secrets.token_hex(32))
         self.name = "donbradman"
     
     def generate_api_key(self):
@@ -14,9 +21,16 @@ class auth:
             'raw_key'    : raw_key,
             'key_prefix' : raw_key[:8],
             'key_hash'   : self._hash_key(raw_key),
-            'expires_at' : datetime.utcnow() + timedelta(days=30)
+            'expires_at' : datetime.datetime.utcnow() + timedelta(days=30)
         }
-    
+        
+    def _hash_key(self, key: str) -> str:
+        return hmac.new(
+            self.secret_key.encode(),
+            key.encode(),
+            hashlib.sha256
+        ).hexdigest()
+        
     def auth_login(self):
         pass
     
