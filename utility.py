@@ -168,7 +168,7 @@ class util_funcs:
             
             print(f"content type : {content_type}")
             print(f"content length : {content_length}")
-            
+    
             boundary = content_type.split("boundary=")[1]
         
             data, filename = self._parsefile(post_data, boundary)

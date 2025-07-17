@@ -1,5 +1,8 @@
 import requests
-
+import os
+from pathlib import Path
+import uuid
+from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 class req:
     def __init__(self):        
@@ -51,6 +54,7 @@ class req:
         response.encoding = 'utf-8'
         print(response.text)
         
+        
     def get_file_by_id(self, endpoint="/api/files/")->None:
         file_id = input("Enter the file_id you want : ")
         self.url = self.url + endpoint + file_id
@@ -62,15 +66,62 @@ class req:
             print(response.text)
         
         
-
+    def upload(self, endpoint="/api/upload/", f_path : Path = None)->None:
+        self.url = self.url + endpoint
+        
+        if not f_path:
+            f_path = Path(input("Enter the path : ").strip())
+        
+        try:        
+            if f_path.is_file():
+                with open(f_path, "rb") as f:
+                    boundary = uuid.uuid4().hex
+                    
+                    fields = {
+                        "file": (f_path.name, f),
+                        "filename" : f_path.name, 
+                    }
+                    
+                    mp_encoder = MultipartEncoder(
+                        fields = fields,
+                        boundary = boundary
+                    )
+                    headers = {
+                        **self.header,
+                        'Content-Type' : f'multipart/form-data; boundary={boundary}',
+                        'X-Upload-Source' : 'Python Client'
+                    }
+                    
+                    response = requests.post(
+                        self.url, 
+                        headers=headers,
+                        data=mp_encoder,
+                        verify=False,
+                        timeout=(10, 30)
+                    )
+                    
+                    response.encoding = 'utf-8'
+                    print(response.text)
+                    
+            elif f_path.is_dir():
+                contents = os.listdir(f_path)
+                for item in contents:
+                    self.upload(f_path = item)
+            else:
+                print("this path does not exist...")
+                    
+        except Exception as e:
+            raise RuntimeError(e)
+                
+                
 
 if __name__ == "__main__":
         
     request_obj = req()
 
-    #func = input("Enter what function to call : ")
+    func = input("Enter what function to call : ")
 
-    func = "signup"
+    #func = "signup"
     
     if hasattr(request_obj, func):
         method = getattr(request_obj, func)
