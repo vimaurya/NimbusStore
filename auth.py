@@ -12,13 +12,13 @@ import jwt
 load_dotenv()
 
 
-TOKEN_BLOCK = set()
+TOKEN_BLOCKLIST = set()
 
 
 class auth:
     def __init__(self):
         self.secret_key = os.getenv('API_KEY_SECRET', secrets.token_hex(32))
-        self.name = "donbradman"
+        self.SECRET = "sachinetendulkaristhegreatestcricketerofalltime"
     
     
     def jwt_required(self, func):
@@ -30,12 +30,11 @@ class auth:
                 return handler.send_error(404, "Missing or invalid token")
 
             try:
-                decoded_token = auth.validate_jwt(auth_header)
+                decoded_token = self.validate_jwt(auth_header)
                 if decoded_token:
-                    g.user = decoded_token 
-                    g.username = g.user['username']
+                    handler.current_user = decoded_token
                 else:
-                    hanlder.send_error(401, "Invalid token")
+                    handler.send_error(401, "Invalid token")
             except jwt.ExpiredSignatureError:
                 handler.send_error(401, "Token has expired")
             except jwt.InvalidTokenError:
@@ -69,22 +68,25 @@ class auth:
         pass
     
     def generate_jwt(self, payload):
-        exp = datetime.now() + timedelta(minutes=5)
+        exp = datetime.datetime.utcnow() + timedelta(minutes=5)
         payload["exp"] = exp.timestamp()
         print(f"payload : {payload}")
-        JWT = jwt.encode(payload, SECRET, algorithm="HS256")
+        JWT = jwt.encode(payload, self.SECRET, algorithm="HS256")
         print(JWT)
         return JWT
             
             
-    def validate_jwt(self, token):
+    def validate_jwt(self, header):
         try:
-            token = token.split(" ")[1]
+            token = header.split(" ")[1]
+            
+            if not token:
+                return token
             
             if token in TOKEN_BLOCKLIST:
                 raise jwt.ExpiredSignatureError
             
-            decoded_token = jwt.decode(token, SECRET, algorithms=["HS256"])
+            decoded_token = jwt.decode(token, self.SECRET, algorithms=["HS256"])
             print(f'User : {decoded_token}')
             return decoded_token
         except Exception as e:

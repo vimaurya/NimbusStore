@@ -51,7 +51,7 @@ class util_funcs:
             api_key = db.create_api_key(user_id)
             
             if api_key:
-                token = auth.generate_jwt({"user" : f"user_id"})
+                token = auth.generate_jwt({"user" : f"{user_id}"})
                 handler.send_response(201)
                 handler.send_header("Content-Type", "application/json")
                 handler.end_headers()
@@ -61,7 +61,7 @@ class util_funcs:
                     "user_id" : user_id,
                     "api_key" : f"{api_key}",
                     "message" : "handle the api keys with safety, store it in a trusted location",
-                    "jwt"     : {token}
+                    "jwt"     : f"{token}"
                 }
                 
                 handler.wfile.write(json.dumps(response).encode())  
