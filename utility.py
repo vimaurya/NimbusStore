@@ -5,6 +5,10 @@ import shortuuid
 import os
 import ssl
 import dbconfig
+from auth import auth
+
+
+auth = auth()
 
 class util_funcs:
     def __init__(self, STORAGE_PATH):
@@ -47,15 +51,17 @@ class util_funcs:
             api_key = db.create_api_key(user_id)
             
             if api_key:
+                token = auth.generate_jwt({"user" : f"user_id"})
                 handler.send_response(201)
                 handler.send_header("Content-Type", "application/json")
                 handler.end_headers()
-            
+
                 response = {
                     "success": True,
                     "user_id" : user_id,
                     "api_key" : f"{api_key}",
-                    "message" : "handle the api keys with safety, store it in a trusted location"
+                    "message" : "handle the api keys with safety, store it in a trusted location",
+                    "jwt"     : {token}
                 }
                 
                 handler.wfile.write(json.dumps(response).encode())  
@@ -66,7 +72,7 @@ class util_funcs:
         except Exception as e:
             handler.send_error(500, f"{str(e)}")
         
-        
+    @auth.jwt_required   
     def files(self, handler):
         handler.send_response(200)
         handler.send_header("Content-Type", "application/json")
@@ -77,7 +83,7 @@ class util_funcs:
         response = {"Files":f"{dirs}"}
         handler.wfile.write(json.dumps(response).encode())   
         
-
+    @auth.jwt_required
     def file_by_id(self, handler, file_id):
         try:
             print(f"Requested file: {file_id}")
@@ -155,7 +161,7 @@ class util_funcs:
         except Exception as e:
             print(f"File serving error: {e}")
            
-                
+    @auth.jwt_required            
     def upload(self, handler):
         try:
             content_type = handler.headers['Content-Type']

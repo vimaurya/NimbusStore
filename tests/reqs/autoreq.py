@@ -5,11 +5,13 @@ import uuid
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 class req:
-    def __init__(self):        
+    def __init__(self):
+        self.jwt = ""        
         self.header = {
             'Host' : 'https://localhost:8000',
             'Content-Type' : 'application/json',
-            'Accept'    : 'application/json'
+            'Accept'    : 'application/json',
+            'Authorization' : f'Bearer {self.jwt}'
         }
 
         self.url = 'https://localhost:8000'
@@ -42,7 +44,11 @@ class req:
             ) 
             response.raise_for_status()
             
-            print(response.text)
+            response = resonse.json()
+            
+            self.jwt = response['jwt']
+            
+            print(response)
             
         except Exception as e:
             print(str(e))
