@@ -108,8 +108,29 @@ class Database:
                 conn.rollback()
                 raise RuntimeError(f"Key storage failed: {str(e)}")
 
-
-
+    
+    def check_user_data(self, user_id:str, password:str)->bool:
+        if not self._user_exists(user_id):
+            raise KeyError("User {user_id} not found")
+        
+        try:
+            with self._get_connection() as conn:
+                with conn.cursor() as cursor:
+                    query = "SELECT password_hash FROM users WHERE user_id = %s LIMIT 1"
+                    cursor.execute(query, (user_id,))
+                    result = cursor.fetchone()
+                    
+                    if not result:
+                        return False 
+                    
+                    stored_hash = result[0]
+                    
+                    return self.auth.verify_password(password, stored_hash)
+                    
+        except Exception as e:
+            conn.rollback()
+            raise RuntimeError(f"Credential verification failed: {str(e)}")
+        
 class ConnectionPool:
     def __init__(self, max_connections=5, **kwargs):
         self._connections = Queue(max_connections)

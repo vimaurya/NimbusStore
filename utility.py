@@ -16,6 +16,58 @@ class util_funcs:
         self.CHUNK_SIZE = 1024 * 64  
         mimetypes.init()
         
+        
+    def login(self, handler):
+        try:
+            content_type = handler.headers['content-Type']
+            if content_type != 'application/json':
+                handler.send_error(415, "only json data accepted")
+                return
+            
+            content_length = int(handler.headers.get('Content-Length', 0))
+            post_data = handler.rfile.read(content_length)
+            
+            user_data = json.loads(post_data)
+            
+            print(f"this is user data : {user_data}")
+            
+            required = ['user_id', 'password']
+            
+            if not all(field in user_data for field in required):
+                handler.send_error(400, "missing required field(s)")
+                return
+            
+            user_id = user_data['user_id']
+            password = user_data['password']
+            
+            if not user_id or not password:
+                raise ValueError("required fields can not be empty") 
+            
+            db = dbconfig.Database()
+            
+            user_check = db.check_user_data(user_id, password)
+            
+            if user_check:
+                token = auth.generate_jwt({"user" : f"{user_id}"})
+                handler.send_response(201)
+                handler.send_header("Content-Type", "application/json")
+                handler.end_headers()
+
+                response = {
+                    "success": True,
+                    "user_id" : user_id,
+                    "message" : "you are logged in and authenticated",
+                    "jwt"     : f"{token}"
+                }
+                
+                handler.wfile.write(json.dumps(response).encode())  
+            else:
+                handler.send_error(500, "incorrect user id or password")
+                
+        except Exception as e:
+            handler.send_error(500, f"{str(e)}")
+            
+                
     def signup(self, handler):
         try:
             content_type = handler.headers['Content-Type']
@@ -71,8 +123,8 @@ class util_funcs:
             
         except Exception as e:
             handler.send_error(500, f"{str(e)}")
-        
-    @auth.jwt_required   
+            
+    @auth.jwt_required    
     def files(self, handler):
         handler.send_response(200)
         handler.send_header("Content-Type", "application/json")
@@ -82,6 +134,7 @@ class util_funcs:
 
         response = {"Files":f"{dirs}"}
         handler.wfile.write(json.dumps(response).encode())   
+        
         
     @auth.jwt_required
     def file_by_id(self, handler, file_id):

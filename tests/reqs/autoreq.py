@@ -15,6 +15,46 @@ class req:
         }
 
         self.url = 'https://localhost:8000'
+        
+    def login(self, endpoint='/api/login')->None:
+        self.url = self.url + endpoint
+        
+        while True:
+            user_id = input("Enter user_id : ")
+            password = input("Enter password : ")
+            #conf_password = input("Confirm password : ")
+            
+            conf_password = password
+            
+            if password==conf_password:
+                break
+            
+            print("passwords do not match...\n")
+            
+        payload = {
+            'user_id' : user_id,
+            'password' : password
+        } 
+        try:   
+            response = requests.post(
+                self.url, 
+                json=payload,
+                headers=self.header, 
+                verify=False
+            ) 
+            response.raise_for_status()
+            
+            response = response.json()
+            
+            self.jwt = response['jwt']
+        
+            self.header['Authorization'] = f'Bearer {self.jwt}'
+            
+            print(response)
+            
+        except Exception as e:
+            print(str(e))
+        
     
     def signup(self, endpoint='/api/signup')->None:
         self.url = self.url + endpoint
@@ -47,7 +87,8 @@ class req:
             response = response.json()
             
             self.jwt = response['jwt']
-            self.header['jwt'] = self.jwt
+            
+            self.header['Authorization'] = f'Bearer {self.jwt}'
             
             print(response)
             
@@ -56,6 +97,9 @@ class req:
         
         
     def get_files(self, endpoint='/api/files')->None:
+        
+        print(f"this is header : \n{self.header}")
+            
         self.url = self.url+endpoint
         response = requests.get(self.url, headers=self.header, verify=False)
         response.encoding = 'utf-8'
@@ -123,15 +167,20 @@ class req:
                 
 
 if __name__ == "__main__":
-        
+    
     request_obj = req()
 
-    func = input("Enter what function to call : ")
+    while True:
+        
+        request_obj.url = 'https://localhost:8000'
+        
+        func = input("Enter what function to call : ")
 
-    #func = "signup"
-    
-    if hasattr(request_obj, func):
-        method = getattr(request_obj, func)
-        method()
-    else:
-        print("this function does not exist...")
+        #func = "signup"
+        
+        if hasattr(request_obj, func):
+            method = getattr(request_obj, func)
+            method()
+        else:
+            print("this function does not exist...")
+            print("-"*5)

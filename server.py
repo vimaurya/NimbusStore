@@ -52,7 +52,9 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             "/api/upload",
             "/api/upload/",
             "/api/signup/",
-            "/api/signup"
+            "/api/signup",
+            "/api/login",
+            "/api/login/"
         ]
         
         if self.path not in paths:
@@ -64,6 +66,8 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
         elif re.match(r'/api/signup/?$', self.path):
             self.utils.signup(self)
             
+        elif re.match(r'/api/login/?$', self.path):
+            self.utils.login(self)
             
 
 """

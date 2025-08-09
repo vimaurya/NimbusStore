@@ -26,11 +26,13 @@ class auth:
         def wrapper(self_var, handler, *args, **kwargs):
             auth_header = handler.headers.get("Authorization")
 
+            print(f"This is authorization header : \n{auth_header}")
             if not auth_header or not auth_header.startswith("Bearer "):
                 return handler.send_error(404, "Missing or invalid token")
 
             try:
                 decoded_token = self.validate_jwt(auth_header)
+                print(f"this is decoded token : {decoded_token}")
                 if decoded_token:
                     handler.current_user = decoded_token
                 else:
@@ -69,6 +71,7 @@ class auth:
     
     def generate_jwt(self, payload):
         exp = datetime.datetime.utcnow() + timedelta(minutes=5)
+        print(f"this is token expiry time : {exp}")
         payload["exp"] = exp.timestamp()
         print(f"payload : {payload}")
         JWT = jwt.encode(payload, self.SECRET, algorithm="HS256")
@@ -78,6 +81,7 @@ class auth:
             
     def validate_jwt(self, header):
         try:
+            print(f"this is header while validating : {header}")
             token = header.split(" ")[1]
             
             if not token:
@@ -92,7 +96,16 @@ class auth:
         except Exception as e:
             print(f'Exception verifying jwt : {e}')
             raise RuntimeError(e)
-        
+    
+    def verify_password(self, password, stored_hash)->bool:
+        try:
+            return bcrypt.checkpw(
+                password.encode('utf-8'),
+                stored_hash.encode('utf-8')
+            )   
+        except Exception as e:
+            print(f"{str(e)}")
+            return False
         
     def hash_password(self, password):
         hash_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
