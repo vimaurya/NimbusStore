@@ -11,7 +11,8 @@ class req:
             'Host' : 'https://localhost:8000',
             'Content-Type' : 'application/json',
             'Accept'    : 'application/json',
-            'Authorization' : f'Bearer {self.jwt}'
+            'Authorization' : f'Bearer {self.jwt}',
+            'Session-ID' : None
         }
 
         self.url = 'https://localhost:8000'
@@ -47,8 +48,14 @@ class req:
             response = response.json()
             
             self.jwt = response['jwt']
+            
+            self.session_id = response['session_id']
         
+            print(f"This is session id : {self.session_id}")
+            
             self.header['Authorization'] = f'Bearer {self.jwt}'
+            
+            self.header['Session-ID'] = self.session_id
             
             print(response)
             
@@ -88,7 +95,13 @@ class req:
             
             self.jwt = response['jwt']
             
+            self.session_id = response['session_id']
+        
+            print(f"This is session id : {self.session_id}")
+            
             self.header['Authorization'] = f'Bearer {self.jwt}'
+            
+            self.header['Session-ID'] = self.session_id
             
             print(response)
             
@@ -163,7 +176,10 @@ class req:
                     
         except Exception as e:
             raise RuntimeError(e)
-                
+    
+    def print_header(self):
+        print(f"this is header : \n {self.header}")
+    
                 
 
 if __name__ == "__main__":

@@ -1,0 +1,163 @@
+2025-08-10 18:56:41,078 - INFO - retrieved session id : UqnzvJuJJgr4niGL1uOu-lPTavS3CcmPecP44OWnKqQ
+2025-08-10 18:57:08,493 - INFO - retrieved session id : y0MhRbv36TAEnqLty7dLlH2SbOfxy6mU6N9LOrW4QS4
+2025-08-10 18:57:08,493 - INFO - test : None
+2025-08-10 18:57:08,493 - INFO - session from session_manager : None
+2025-08-10 19:00:53,713 - INFO - retrieved session id : 36CWsWZ-ASPTu9JYBz5GLV9jac7EwMxrc986Snqcj2o
+2025-08-10 19:00:53,713 - INFO - test : None
+2025-08-10 19:01:44,943 - INFO - retrieved session id : otdkl1HO9cZvk58oelPw3grCwU3Dfl4YFTxKbZBFV2s
+2025-08-10 19:01:44,943 - INFO - test : None
+2025-08-10 19:01:44,943 - INFO - session from session_manager : None
+2025-08-10 19:05:08,247 - INFO - SessionManager initialized
+2025-08-10 19:05:18,153 - INFO - SessionManager initialized
+2025-08-10 19:05:18,153 - INFO - Created session: NW7x_K065-jveCwmQx0urA3aYhOpVAvNNRf3UvmLpRs for user: slimshady
+2025-08-10 19:05:23,707 - INFO - retrieved session id : NW7x_K065-jveCwmQx0urA3aYhOpVAvNNRf3UvmLpRs
+2025-08-10 19:05:23,707 - INFO - test : {}
+2025-08-10 19:05:23,707 - WARNING - Session not found: NW7x_K065-jveCwmQx0urA3aYhOpVAvNNRf3UvmLpRs
+2025-08-10 19:05:23,707 - INFO - session from session_manager : None
+2025-08-10 19:10:47,634 - INFO - Session id created - X21q7csp5ckcDbxhTM_1F1Nz2CJHH0eTkwxi3_PU8jE for user : slimshady
+2025-08-10 19:10:51,507 - INFO - retrieved session id : X21q7csp5ckcDbxhTM_1F1Nz2CJHH0eTkwxi3_PU8jE
+2025-08-10 19:11:26,592 - INFO - retrieved session id : X21q7csp5ckcDbxhTM_1F1Nz2CJHH0eTkwxi3_PU8jE
+2025-08-10 19:11:26,592 - WARNING - session does not exist : {session_id}
+2025-08-10 19:11:26,592 - INFO - session from session_manager : None
+2025-08-10 19:11:40,806 - INFO - Session id created - KhiT-SAX7PT8DslulTGffHJ9vlcKrb_LzCPyh6jPuuI for user : slimshady
+2025-08-10 19:11:57,579 - INFO - retrieved session id : KhiT-SAX7PT8DslulTGffHJ9vlcKrb_LzCPyh6jPuuI
+2025-08-10 19:11:57,579 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 13, 41, 40, 806483, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 14, 41, 57, 579633, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:19:08,694 - INFO - Session id created - rMifn0sYpfSVL0YcPReMgFxSRr2ZUKScr8Qi1AiswBo for user : slimshady
+2025-08-10 19:19:12,540 - INFO - authorizing user
+2025-08-10 19:19:12,556 - INFO - retrieved session id : rMifn0sYpfSVL0YcPReMgFxSRr2ZUKScr8Qi1AiswBo
+2025-08-10 19:19:12,556 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 13, 49, 8, 694903, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 14, 49, 12, 556715, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:19:12,556 - INFO - Trying to retrieve files for user : slimshady
+2025-08-10 19:19:12,556 - INFO - retrieval successful
+2025-08-10 19:20:00,251 - INFO - Session id created - CPrrclm2lZaEKmAi4R-rCmOSMUDGEnJjA0J2n60n33E for user : slimshady
+2025-08-10 19:20:03,890 - INFO - authorizing user
+2025-08-10 19:20:03,890 - INFO - retrieved session id : CPrrclm2lZaEKmAi4R-rCmOSMUDGEnJjA0J2n60n33E
+2025-08-10 19:20:03,890 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 13, 50, 0, 251338, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 14, 50, 3, 890632, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:20:03,891 - INFO - Trying to retrieve files for user : slimshady
+2025-08-10 19:20:03,891 - INFO - retrieval successful
+2025-08-10 19:20:03,891 - INFO - ['2AUQNKK_chill.mp3']
+2025-08-10 19:24:46,897 - INFO - Session id created - CGyYIRlKOIDWkFrupZX_MvMq1OChHY-O0jaWoBe7HO4 for user : slimshady
+2025-08-10 19:24:57,380 - INFO - authorizing user
+2025-08-10 19:24:57,380 - INFO - retrieved session id : CGyYIRlKOIDWkFrupZX_MvMq1OChHY-O0jaWoBe7HO4
+2025-08-10 19:24:57,380 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 13, 54, 46, 897775, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 14, 54, 57, 380986, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:24:57,380 - ERROR - Unexpected error in files(): 'util_funcs' object has no attribute '_is_connection_active'
+Traceback (most recent call last):
+  File "C:\Users\Vikash maurya\backendproject\apis\API cloud storage\utility.py", line 143, in files
+    if not self._is_connection_active(handler):
+AttributeError: 'util_funcs' object has no attribute '_is_connection_active'
+2025-08-10 19:26:18,822 - INFO - Session id created - 5SXukprfazJ4mjs4RyDuUd_UiSDM379oGrRcgCJTXqc for user : slimshady
+2025-08-10 19:26:23,503 - INFO - authorizing user
+2025-08-10 19:26:23,503 - INFO - retrieved session id : 5SXukprfazJ4mjs4RyDuUd_UiSDM379oGrRcgCJTXqc
+2025-08-10 19:26:23,503 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 13, 56, 18, 822248, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 14, 56, 23, 503684, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:26:23,503 - INFO - Retrieving files for user: slimshady
+2025-08-10 19:26:23,503 - INFO - Retrieved 1 items for slimshady
+2025-08-10 19:26:23,507 - WARNING - Client disconnected during send: EOF occurred in violation of protocol (_ssl.c:2396)
+2025-08-10 19:26:54,511 - INFO - Session id created - 42ryxLB6ajv4pavpwvEiqHehReKXnvakzr1zMwDwSVc for user : slimshady
+2025-08-10 19:26:58,027 - INFO - authorizing user
+2025-08-10 19:26:58,027 - INFO - retrieved session id : 42ryxLB6ajv4pavpwvEiqHehReKXnvakzr1zMwDwSVc
+2025-08-10 19:26:58,027 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 13, 56, 54, 511657, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 14, 56, 58, 27727, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:26:58,027 - INFO - Retrieving files for user: slimshady
+2025-08-10 19:26:58,027 - INFO - Retrieved 1 items for slimshady
+2025-08-10 19:26:58,027 - WARNING - Client disconnected during send: EOF occurred in violation of protocol (_ssl.c:2396)
+2025-08-10 19:27:12,950 - INFO - authorizing user
+2025-08-10 19:27:12,950 - INFO - retrieved session id : 42ryxLB6ajv4pavpwvEiqHehReKXnvakzr1zMwDwSVc
+2025-08-10 19:27:12,950 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 13, 56, 54, 511657, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 14, 57, 12, 950406, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:27:12,950 - INFO - Retrieving files for user: slimshady
+2025-08-10 19:27:12,950 - INFO - Retrieved 1 items for slimshady
+2025-08-10 19:27:12,950 - WARNING - Client disconnected during send: EOF occurred in violation of protocol (_ssl.c:2396)
+2025-08-10 19:32:44,921 - INFO - Session id created - l2CxypfhTqaBqEFTXGy150yscOqupNQmLyz_o_VWeeI for user : slimshady
+2025-08-10 19:32:49,120 - INFO - authorizing user
+2025-08-10 19:32:49,120 - INFO - retrieved session id : l2CxypfhTqaBqEFTXGy150yscOqupNQmLyz_o_VWeeI
+2025-08-10 19:32:49,120 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 14, 2, 44, 921693, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 15, 2, 49, 120650, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:32:49,120 - INFO - Listing files for user: slimshady
+2025-08-10 19:32:49,120 - ERROR - Unexpected error: 'util_funcs' object has no attribute '_is_connection_active'
+Traceback (most recent call last):
+  File "C:\Users\Vikash maurya\backendproject\apis\API cloud storage\utility.py", line 150, in files
+    if not self._is_connection_active(handler):
+AttributeError: 'util_funcs' object has no attribute '_is_connection_active'
+2025-08-10 19:33:45,141 - INFO - Session id created - Kw-7IIln7oukeQSGCxZUoH7wFmpXpTbhXjHZCNLBa0c for user : slimshady
+2025-08-10 19:33:49,385 - INFO - authorizing user
+2025-08-10 19:33:49,385 - INFO - retrieved session id : Kw-7IIln7oukeQSGCxZUoH7wFmpXpTbhXjHZCNLBa0c
+2025-08-10 19:33:49,385 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 14, 3, 45, 141639, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 15, 3, 49, 385727, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:33:49,385 - INFO - Listing files for user: slimshady
+2025-08-10 19:33:49,401 - WARNING - Client disconnected during send: EOF occurred in violation of protocol (_ssl.c:2396)
+2025-08-10 19:34:57,627 - INFO - Session id created - Tqrg1YDVDTOhMXicP9DW7e6SFvrDCQ4ekZSy06ALzEY for user : slimshady
+2025-08-10 19:35:02,366 - INFO - authorizing user
+2025-08-10 19:35:02,367 - INFO - retrieved session id : Tqrg1YDVDTOhMXicP9DW7e6SFvrDCQ4ekZSy06ALzEY
+2025-08-10 19:35:02,367 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 14, 4, 57, 627374, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 15, 5, 2, 367804, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:35:02,367 - INFO - Listing files for user: slimshady
+2025-08-10 19:35:02,367 - WARNING - Client disconnected during send: EOF occurred in violation of protocol (_ssl.c:2396)
+2025-08-10 19:39:46,867 - INFO - Session id created - mNSbtvgT7Bv1gyeNIpEy3tjCUD4Tm-2bWuFJpvLjnGk for user : slimshady
+2025-08-10 19:39:50,790 - INFO - authorizing user
+2025-08-10 19:39:50,790 - INFO - Invalid token
+2025-08-10 19:46:42,985 - INFO - authorizing user
+2025-08-10 19:48:20,748 - INFO - Session id created - RQDLhy4WPpnbzdmCvX7Px-y5eqcYt_dG_eCUc-C4WK4 for user : slimshady
+2025-08-10 19:48:26,133 - INFO - authorizing user
+2025-08-10 19:48:26,133 - ERROR - JWT validation failed: Invalid header padding
+2025-08-10 19:48:26,133 - INFO - this is decoded token : None
+2025-08-10 19:48:26,133 - INFO - not authorized
+2025-08-10 19:50:48,348 - INFO - Session id created - Dc9IjFcjEp0qANoYRA31mIOOc9AkwV1AOOW78fVOmSM for user : slimshady
+2025-08-10 19:50:54,099 - INFO - Unverified token contents: {'sub': 'slimshady', 'iat': 1754835648, 'exp': 1754839248}
+2025-08-10 19:50:54,099 - INFO - retrieved session id : Dc9IjFcjEp0qANoYRA31mIOOc9AkwV1AOOW78fVOmSM
+2025-08-10 19:50:54,099 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 14, 20, 48, 348526, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 15, 20, 54, 99120, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:50:54,099 - INFO - Listing files for user: slimshady
+2025-08-10 19:50:54,099 - INFO - Sent 1 files to user slimshady
+2025-08-10 19:52:55,854 - INFO - Session id created - eJ_HsQKVqFChtyvljBdFFbDBYIsxzeqXrtk8KoApM64 for user : slimshady
+2025-08-10 19:52:59,314 - INFO - Unverified token contents: {'sub': 'slimshady', 'iat': 1754835775, 'exp': 1754839375}
+2025-08-10 19:52:59,314 - INFO - result of validate_jwt : {'sub': 'slimshady', 'iat': 1754835775, 'exp': 1754839375}
+2025-08-10 19:52:59,314 - INFO - retrieved session id : eJ_HsQKVqFChtyvljBdFFbDBYIsxzeqXrtk8KoApM64
+2025-08-10 19:52:59,314 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 14, 22, 55, 854089, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 15, 22, 59, 314027, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:52:59,314 - INFO - Listing files for user: slimshady
+2025-08-10 19:52:59,314 - INFO - Sent 1 files to user slimshady
+2025-08-10 19:56:06,280 - INFO - Unverified token contents: {'sub': 'slimshady', 'iat': 1754835775, 'exp': 1754839375}
+2025-08-10 19:56:06,280 - INFO - result of validate_jwt : {'sub': 'slimshady', 'iat': 1754835775, 'exp': 1754839375}
+2025-08-10 19:56:06,280 - INFO - retrieved session id : eJ_HsQKVqFChtyvljBdFFbDBYIsxzeqXrtk8KoApM64
+2025-08-10 19:56:06,280 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 14, 22, 55, 854089, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 15, 26, 6, 280260, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:57:00,942 - INFO - Session id created - o5Dk4_waLmHkzNOwYLn1Qse2c64STDYGl7UWfziH9aI for user : slimshady
+2025-08-10 19:57:05,314 - INFO - Unverified token contents: {'sub': 'slimshady', 'iat': 1754836020, 'exp': 1754839620}
+2025-08-10 19:57:05,314 - INFO - result of validate_jwt : {'sub': 'slimshady', 'iat': 1754836020, 'exp': 1754839620}
+2025-08-10 19:57:05,314 - INFO - retrieved session id : o5Dk4_waLmHkzNOwYLn1Qse2c64STDYGl7UWfziH9aI
+2025-08-10 19:57:05,314 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 14, 27, 0, 942150, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 15, 27, 5, 314904, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:57:05,314 - INFO - Listing files for user: slimshady
+2025-08-10 19:57:05,314 - INFO - Sent 1 files to user slimshady
+2025-08-10 19:58:33,652 - INFO - Unverified token contents: {'sub': 'slimshady', 'iat': 1754836020, 'exp': 1754839620}
+2025-08-10 19:58:33,652 - INFO - result of validate_jwt : {'sub': 'slimshady', 'iat': 1754836020, 'exp': 1754839620}
+2025-08-10 19:58:33,652 - INFO - retrieved session id : o5Dk4_waLmHkzNOwYLn1Qse2c64STDYGl7UWfziH9aI
+2025-08-10 19:58:33,652 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 14, 27, 0, 942150, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 15, 28, 33, 652379, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:58:39,422 - INFO - Unverified token contents: {'sub': 'slimshady', 'iat': 1754836020, 'exp': 1754839620}
+2025-08-10 19:58:39,422 - INFO - result of validate_jwt : {'sub': 'slimshady', 'iat': 1754836020, 'exp': 1754839620}
+2025-08-10 19:58:39,422 - INFO - retrieved session id : o5Dk4_waLmHkzNOwYLn1Qse2c64STDYGl7UWfziH9aI
+2025-08-10 19:58:39,422 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 14, 27, 0, 942150, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 15, 28, 39, 422492, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 19:58:39,422 - INFO - Listing files for user: slimshady
+2025-08-10 19:58:39,422 - INFO - Sent 1 files to user slimshady
+2025-08-10 19:59:59,634 - INFO - Session id created - CRtMpDhHUmubn9HXQwn8A-YOnITPXSfYgPRZXeEjUiw for user : slimshady
+2025-08-10 20:00:04,565 - INFO - Unverified token contents: {'sub': 'slimshady', 'iat': 1754836199, 'exp': 1754839799}
+2025-08-10 20:00:04,565 - INFO - result of validate_jwt : {'sub': 'slimshady', 'iat': 1754836199, 'exp': 1754839799}
+2025-08-10 20:00:04,565 - INFO - retrieved session id : CRtMpDhHUmubn9HXQwn8A-YOnITPXSfYgPRZXeEjUiw
+2025-08-10 20:00:04,565 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 14, 29, 59, 634856, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 15, 30, 4, 565950, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 20:00:04,565 - INFO - Listing files for user: slimshady
+2025-08-10 20:00:04,565 - INFO - Sent 1 files to user slimshady
+2025-08-10 20:03:05,098 - INFO - Session id created - Z_5uxJAqt54ImRuAGoV1dTZcqveoH1AdubqGAxuDn1A for user : slimshady
+2025-08-10 20:03:08,958 - INFO - Unverified token contents: {'sub': 'slimshady', 'iat': 1754836385, 'exp': 1754839985}
+2025-08-10 20:03:08,958 - INFO - result of validate_jwt : {'sub': 'slimshady', 'iat': 1754836385, 'exp': 1754839985}
+2025-08-10 20:03:08,958 - INFO - retrieved session id : Z_5uxJAqt54ImRuAGoV1dTZcqveoH1AdubqGAxuDn1A
+2025-08-10 20:03:08,958 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 14, 33, 5, 98002, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 15, 33, 8, 958465, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 20:03:08,958 - INFO - Listing files for user: slimshady
+2025-08-10 20:03:08,958 - INFO - Found 2 files in C:/Users/Vikash maurya/backendproject/apis/API cloud storage/Storage\slimshady
+2025-08-10 20:03:08,958 - ERROR - Critical error: memoryview: a bytes-like object is required, not 'str'
+Traceback (most recent call last):
+  File "C:\Users\Vikash maurya\backendproject\apis\API cloud storage\utility.py", line 200, in files
+    json.dump(response, handler.wfile)
+  File "C:\Users\Vikash maurya\AppData\Local\Programs\Python\Python310\lib\json\__init__.py", line 180, in dump
+    fp.write(chunk)
+  File "C:\Users\Vikash maurya\AppData\Local\Programs\Python\Python310\lib\socketserver.py", line 826, in write
+    self._sock.sendall(b)
+  File "C:\Users\Vikash maurya\AppData\Local\Programs\Python\Python310\lib\ssl.py", line 1234, in sendall
+    with memoryview(data) as view, view.cast("B") as byte_view:
+TypeError: memoryview: a bytes-like object is required, not 'str'
+2025-08-10 20:07:55,883 - INFO - Session id created - zGeqO8d7Ty-KT1qZaj7t5QRvRUC5Q_po7Iq3nNSBfS0 for user : slimshady
+2025-08-10 20:07:59,593 - INFO - Unverified token contents: {'sub': 'slimshady', 'iat': 1754836675, 'exp': 1754840275}
+2025-08-10 20:07:59,593 - INFO - result of validate_jwt : {'sub': 'slimshady', 'iat': 1754836675, 'exp': 1754840275}
+2025-08-10 20:07:59,593 - INFO - retrieved session id : zGeqO8d7Ty-KT1qZaj7t5QRvRUC5Q_po7Iq3nNSBfS0
+2025-08-10 20:07:59,593 - INFO - session from session_manager : {'user_id': 'slimshady', 'created_at': datetime.datetime(2025, 8, 10, 14, 37, 55, 883888, tzinfo=datetime.timezone.utc), 'expires_at': datetime.datetime(2025, 8, 10, 15, 37, 59, 593019, tzinfo=datetime.timezone.utc), 'ip': None, 'user_agent': None}
+2025-08-10 20:07:59,593 - INFO - Listing files for user: slimshady
+2025-08-10 20:07:59,593 - INFO - Found 2 files in C:/Users/Vikash maurya/backendproject/apis/API cloud storage/Storage\slimshady

@@ -111,7 +111,7 @@ class Database:
     
     def check_user_data(self, user_id:str, password:str)->bool:
         if not self._user_exists(user_id):
-            raise KeyError("User {user_id} not found")
+            raise KeyError(f"User {user_id} not found")
         
         try:
             with self._get_connection() as conn:

@@ -6,7 +6,9 @@ import os
 import ssl
 import dbconfig
 from auth import auth
-
+from session import SessionManager
+from logs import logging
+from datetime import datetime
 
 auth = auth()
 
@@ -48,16 +50,21 @@ class util_funcs:
             user_check = db.check_user_data(user_id, password)
             
             if user_check:
-                token = auth.generate_jwt({"user" : f"{user_id}"})
+                token = auth.generate_jwt(user_id)
                 handler.send_response(201)
                 handler.send_header("Content-Type", "application/json")
                 handler.end_headers()
 
+                session = SessionManager()
+                session_id = session.create_session(user_id)
+                
+                
                 response = {
                     "success": True,
                     "user_id" : user_id,
                     "message" : "you are logged in and authenticated",
-                    "jwt"     : f"{token}"
+                    "jwt"     : f"{token}",
+                    "session_id" : session_id
                 }
                 
                 handler.wfile.write(json.dumps(response).encode())  
@@ -103,17 +110,22 @@ class util_funcs:
             api_key = db.create_api_key(user_id)
             
             if api_key:
-                token = auth.generate_jwt({"user" : f"{user_id}"})
+                token = auth.generate_jwt(user_id)
                 handler.send_response(201)
                 handler.send_header("Content-Type", "application/json")
                 handler.end_headers()
 
+                
+                session = SessionManager()
+                session_id = session.create_session(user_id)
+                
                 response = {
                     "success": True,
                     "user_id" : user_id,
                     "api_key" : f"{api_key}",
                     "message" : "handle the api keys with safety, store it in a trusted location",
-                    "jwt"     : f"{token}"
+                    "jwt"     : f"{token}",
+                    "session_id" : session_id
                 }
                 
                 handler.wfile.write(json.dumps(response).encode())  
@@ -123,20 +135,81 @@ class util_funcs:
             
         except Exception as e:
             handler.send_error(500, f"{str(e)}")
-            
-    @auth.jwt_required    
+         
+    @auth.jwt_required  
+    @auth.session_required 
     def files(self, handler):
-        handler.send_response(200)
-        handler.send_header("Content-Type", "application/json")
-        handler.end_headers()
-        
-        dirs = os.listdir(self.STORAGE_PATH)
+        try:
+            user_id = handler.current_user.get('user_id')
+            if not user_id:
+                handler.send_error(401, "Unauthorized")
+                return
 
-        response = {"Files":f"{dirs}"}
-        handler.wfile.write(json.dumps(response).encode())   
-        
-        
+            logging.info(f"Listing files for user: {user_id}")
+
+            if not auth._is_connection_active(handler):
+                logging.warning("Client disconnected before processing")
+                return
+
+            user_dir = os.path.join(self.STORAGE_PATH, user_id)
+            
+            if not os.path.exists(user_dir):
+                logging.error(f"Directory not found: {user_dir}")
+                if auth._is_connection_active(handler):
+                    handler.send_error(404, "User directory not found")
+                return
+
+            if not os.path.isdir(user_dir):
+                logging.error(f"Path is not a directory: {user_dir}")
+                if auth._is_connection_active(handler):
+                    handler.send_error(400, "Invalid user storage path")
+                return
+
+            try:
+                dir_contents = os.listdir(user_dir)
+                files = [
+                    f for f in dir_contents
+                    if os.path.isfile(os.path.join(user_dir, f))
+                ]
+                
+                logging.info(f"Found {len(files)} files in {user_dir}")
+
+            except PermissionError:
+                logging.error(f"Permission denied for: {user_dir}")
+                if auth._is_connection_active(handler):
+                    handler.send_error(403, "Access denied")
+                return
+            except OSError as e:
+                logging.error(f"OS error: {str(e)}")
+                if auth._is_connection_active(handler):
+                    handler.send_error(500, "Storage system error")
+                return
+
+            response = {
+                "path": user_id,
+                "files": files,
+                "count": len(files)
+            }
+
+            if auth._is_connection_active(handler):
+                try:
+                    handler.send_response(200)
+                    handler.send_header("Content-Type", "application/json")
+                    handler.end_headers()
+                    
+                    handler.wfile.write(json.dumps(response).encode())
+                    
+                except (ConnectionError, ssl.SSLEOFError) as e:
+                    logging.warning(f"Client disconnect during send: {e}")
+
+        except Exception as e:
+            logging.error(f"Critical error: {str(e)}", exc_info=True)
+            if auth._is_connection_active(handler):
+                handler.send_error(500, "Internal server error")       
+                    
+                    
     @auth.jwt_required
+    @auth.session_required
     def file_by_id(self, handler, file_id):
         try:
             print(f"Requested file: {file_id}")
@@ -214,7 +287,8 @@ class util_funcs:
         except Exception as e:
             print(f"File serving error: {e}")
            
-    @auth.jwt_required            
+    @auth.jwt_required
+    @auth.session_required            
     def upload(self, handler):
         try:
             content_type = handler.headers['Content-Type']
@@ -237,7 +311,11 @@ class util_funcs:
             
             filename = short_uuid+"_"+filename
             
-            with open(os.path.join(self.STORAGE_PATH, filename), "wb") as f:
+            user_folder = os.path.join(self.STORAGE_PATH, handler.current_user['user_id'])
+            
+            os.makedirs(user_folder, exist_ok=True)
+            
+            with open(os.path.join(user_folder, filename), "wb") as f:
                 f.write(data)
                 
             handler.send_response(200)
